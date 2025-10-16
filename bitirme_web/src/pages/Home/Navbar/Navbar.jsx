@@ -1,6 +1,8 @@
 import React from "react";
 import "./Navbar.css";
-import { FaUser, FaHeart, FaShoppingCart, FaSearch } from "react-icons/fa";
+import {  FaSearch } from "react-icons/fa";
+import { PiUserCircleDashedFill } from "react-icons/pi";
+import { VscHeart } from "react-icons/vsc";
 
 function Navbar() {
   return (
@@ -16,6 +18,7 @@ function Navbar() {
           <input
             type="text"
             className="search"
+            maxLength={50}
             placeholder="Aradığınız ürünü yazınız..."
           />
           <button className="search-btn">
@@ -26,8 +29,8 @@ function Navbar() {
 
       {/* Sağ Kısım - İkonlar */}
       <div className="navbar-right">
-        <FaHeart className="icon" />
-        <FaUser className="icon" />
+        <VscHeart className="icon" />
+        < PiUserCircleDashedFill className="icon" />
       </div>
     </header>
   );

@@ -4,10 +4,17 @@
   }
   
   .product-list {
-    padding: 15px;
+    
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
+  }
+  .homeComponent{
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: "Arial", sans-serif;
+    
   }
   

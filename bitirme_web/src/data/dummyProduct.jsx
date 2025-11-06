@@ -21,7 +21,7 @@ export const products = [
     },
     {
       id: 3,
-      name: "Samsung Galaxy S23",
+      name: "Samsung Galaxy S23 Ligt Green Uzunnnnn Kelimee olursa ne olacak",
       price: 25000,
       oldPrice: 27000,
       discount: 7,

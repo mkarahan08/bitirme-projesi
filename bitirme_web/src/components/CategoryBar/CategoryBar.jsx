@@ -9,7 +9,7 @@ function CategoryBar() {
   return (
     <div className="category-bar">
       {categories.map((cat, index) => (
-        <div
+        <div style={{fontFamily : 'fantasy'}}
           key={index}
           className="category-item"
           onMouseEnter={() => cat.subcategories && setActiveDropdown(cat.name)}
@@ -20,12 +20,12 @@ function CategoryBar() {
         >
           <span>{cat.name}</span>
 
-          {/* İlk seviye dropdown */}
+          
           {cat.subcategories && activeDropdown === cat.name && (
             <div
               className="dropdown-menu"
-              onMouseEnter={() => setActiveDropdown(cat.name)} // Menüye girince açık kalır
-              onMouseLeave={() => setActiveDropdown(null)} // Menüden çıkınca kapanır
+              onMouseEnter={() => setActiveDropdown(cat.name)} 
+              onMouseLeave={() => setActiveDropdown(null)}
             >
               {cat.subcategories.map((sub, i) => (
                 <div
@@ -38,7 +38,7 @@ function CategoryBar() {
                 >
                   <span>{sub.name || sub}</span>
 
-                  {/* İkinci seviye dropdown */}
+                  
                   {sub.subcategories &&
                     activeSubDropdown === sub.name && (
                       <div

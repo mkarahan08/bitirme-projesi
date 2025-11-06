@@ -1,20 +1,24 @@
 import React from 'react'
-import Navbar from './Navbar/Navbar'
-import CategoryBar from './CategoryBar/CategoryBar'
+import Navbar from '../../components/Navbar/Navbar'
+import CategoryBar from '../../components/CategoryBar/CategoryBar'
 import { products } from "../../data/dummyProduct";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import "./Home.css";
+import FilterBar from '../../components/FilterBar/FilterBar';
 
 function Home() {
   return (
     <div>
-      <Navbar/>
-      <CategoryBar/>
-      <div className="product-list">
-        {products.map((p) => (
-          <ProductCard key={p.id} product={p} />
-        ))}
+      
+      <div className='homeComponent'>
+        <FilterBar/>
+        <div className="product-list">
+          {products.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </div>
       </div>
+      
     </div>
   )
 }

@@ -23,6 +23,7 @@
 
 .dropdown-menu {
   position: absolute;
+  font-family: Arial, Helvetica, sans-serif;
   top: 100%;
   left: 0;
   background: white;

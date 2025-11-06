@@ -1,24 +1,30 @@
 import React from "react";
 import "./ProductCard.css";
+import { useNavigate } from "react-router-dom";
 
 function ProductCard({ product }) {
+  const {id, price, image, name, oldPrice } = product;
+
+  const navigate = useNavigate();
+  
   return (
-    <div className="product-card">
-      <img src={product.image} alt={product.name} className="product-img" />
-      <h3 className="product-name">{product.name}</h3>
+    <div className="product-card"
+    onClick={() => navigate("/product/"+ id)}
+    >
+      <div className="flex-row">
+        <p>tarih( doldurulacak)</p>
+        <p className="discount">🢃 %{product.discount}</p>
+      </div>
+      <img src={image} alt={name} className="product-img" />
+      <div style={{height : '70px'}}>
+      <h3 className="product-name">{name}</h3>
+      </div>
       <p className="product-price">
-        {product.price} TL{" "}
-        <span className="old-price">{product.oldPrice} TL</span>
+        {price} TL{" "}
+        <span className="old-price">{oldPrice} TL</span>
       </p>
-      <p className="discount">-%{product.discount}</p>
-      <a
-        href={product.site}
-        className="product-link"
-        target="_blank"
-        rel="noreferrer"
-      >
-        Siteye Git
-      </a>
+      
+   
     </div>
   );
 }

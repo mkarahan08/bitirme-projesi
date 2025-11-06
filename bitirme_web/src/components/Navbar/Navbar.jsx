@@ -7,12 +7,12 @@ import { VscHeart } from "react-icons/vsc";
 function Navbar() {
   return (
     <header className="navbar">
-      {/* Sol Kısım - Logo */}
+      
       <div className="navbar-left">
         <a href="/" className="logo">İNDİRİMSEPETİ</a>
       </div>
 
-      {/* Orta Kısım - Arama Alanı */}
+      
       <div className="navbar-center">
         <div className="search-area">
           <input
@@ -27,7 +27,7 @@ function Navbar() {
         </div>
       </div>
 
-      {/* Sağ Kısım - İkonlar */}
+      
       <div className="navbar-right">
         <VscHeart className="icon" />
         < PiUserCircleDashedFill className="icon" />

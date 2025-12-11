@@ -4,11 +4,16 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import Filter from "./Filter";
 import "./FilterBar.css";
 
-function FilterBar() {
+function FilterBar({ onApply, currentFilters, sort, onSortChange, priceRange, discountRange, categories, sites }) {
   const [openFilter, setOpenFilter] = useState(false);
   const filterRef = useRef(null);
+  const [draft, setDraft] = useState(currentFilters || {});
 
   const toggleFilter = () => setOpenFilter((prev) => !prev);
+
+  useEffect(() => {
+    setDraft(currentFilters || {});
+  }, [currentFilters]);
 
   
   useEffect(() => {
@@ -46,15 +51,25 @@ function FilterBar() {
 
       <div className="sort-menu">
         <label>Sırala: </label>
-        <select>
-          <option>Önerilenler</option>
-          <option>Artan Fiyat</option>
-          <option>Azalan Fiyat</option>
+        <select value={sort} onChange={(e) => onSortChange && onSortChange(e.target.value)}>
+          <option value="recommended">Önerilenler</option>
+          <option value="priceAsc">Artan Fiyat</option>
+          <option value="priceDesc">Azalan Fiyat</option>
         </select>
       </div>
 
       
-      {openFilter && <Filter />}
+      {openFilter && (
+        <Filter
+          value={draft}
+          onChange={setDraft}
+          onApply={() => { onApply && onApply(draft); setOpenFilter(false); }}
+          priceRange={priceRange}
+          discountRange={discountRange}
+          categories={categories}
+          sites={sites}
+        />
+      )}
     </div>
   );
 }

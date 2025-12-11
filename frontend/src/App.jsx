@@ -13,6 +13,7 @@ function App() {
         <Navbar/>
         <CategoryBar/>
         <RouterConfig/>
+  
     </>
   )
 }

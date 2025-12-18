@@ -1,119 +1,178 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser, registerUser } from "../../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
 function Login() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { loading, error, isAuthenticated } = useSelector(
+    (state) => state.user
+  );
+
   const [isSignup, setIsSignup] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      const endpoint = isSignup ? "http://localhost:3000/api/auth/register" : "http://localhost:3000/api/auth/login";
-      const payload = isSignup ? { name, email, password } : { email, password };
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.message || (isSignup ? "Kayıt başarısız" : "Giriş başarısız"));
-      }
-      const data = await res.json();
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+  // login başarılıysa yönlendir
+  useEffect(() => {
+    if (isAuthenticated) {
       navigate("/");
-    } catch (err) {
-      setError(err.message || "Bir hata oluştu");
-    } finally {
-      setLoading(false);
+    }
+  }, [isAuthenticated, navigate]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (isSignup) {
+      dispatch(registerUser({ name, email, password }));
+    } else {
+      dispatch(loginUser({ email, password }));
     }
   };
 
   return (
     <div className="login-page">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <div className="auth-tabs" style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
-          <button
-            type="button"
-            onClick={() => { setIsSignup(false); setError(""); }}
-            style={{
-              padding: "8px 16px",
-              borderRadius: "8px",
-              border: "1px solid #ddd",
-              background: !isSignup ? "#111827" : "#fff",
-              color: !isSignup ? "#fff" : "#111827",
-              cursor: "pointer"
-            }}
-          >
-            Giriş Yap
-          </button>
-          <button
-            type="button"
-            onClick={() => { setIsSignup(true); setError(""); }}
-            style={{
-              padding: "8px 16px",
-              borderRadius: "8px",
-              border: "1px solid #ddd",
-              background: isSignup ? "#111827" : "#fff",
-              color: isSignup ? "#fff" : "#111827",
-              cursor: "pointer"
-            }}
-          >
-            Kayıt Ol
-          </button>
+      <div className="login-container">
+        <div className="login-header">
+          <div className="logo-section">
+            <span className="logo-icon">🛒</span>
+            <h1 className="logo-text">İNDİRİMSEPETİ</h1>
+          </div>
+          <p className="welcome-text">
+            {isSignup 
+              ? "Hesabınızı oluşturun ve indirimleri kaçırmayın!" 
+              : "Hoş geldiniz! Hesabınıza giriş yapın"}
+          </p>
         </div>
-        <h2>{isSignup ? "Kayıt Ol" : "Kullanıcı Girişi"}</h2>
-        {isSignup && (
-          <label>
-            İsim
-            <input
-              type="text"
-              placeholder="Adınız Soyadınız"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </label>
-        )}
-        <label>
-          Email
-          <input
-            type="email"
-            placeholder="ornek@mail.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Şifre
-          <input
-            type="password"
-            placeholder="********"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        {error && <div className="login-error">{error}</div>}
-        <button type="submit" disabled={loading}>
-          {loading ? (isSignup ? "Kayıt yapılıyor..." : "Giriş yapılıyor...") : (isSignup ? "Kayıt Ol" : "Giriş Yap")}
-        </button>
-        
-      </form>
+
+        <form className="login-form" onSubmit={handleSubmit}>
+          {/* TABS */}
+          <div className="auth-tabs">
+            <button
+              type="button"
+              className={`tab-button ${!isSignup ? "active" : ""}`}
+              onClick={() => {
+                setIsSignup(false);
+                setName("");
+                setEmail("");
+                setPassword("");
+              }}
+            >
+              <span className="tab-icon">🔐</span>
+              <span>Giriş Yap</span>
+            </button>
+
+            <button
+              type="button"
+              className={`tab-button ${isSignup ? "active" : ""}`}
+              onClick={() => {
+                setIsSignup(true);
+                setName("");
+                setEmail("");
+                setPassword("");
+              }}
+            >
+              <span className="tab-icon">✨</span>
+              <span>Kayıt Ol</span>
+            </button>
+          </div>
+
+          <div className="form-content">
+            {/* NAME */}
+            {isSignup && (
+              <div className="input-group">
+                <label>
+                  <span className="label-icon">👤</span>
+                  <span>İsim</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ad Soyad"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  className="form-input"
+                />
+              </div>
+            )}
+
+            {/* EMAIL */}
+            <div className="input-group">
+              <label>
+                <span className="label-icon">📧</span>
+                <span>Email</span>
+              </label>
+              <input
+                type="email"
+                placeholder="ornek@mail.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="form-input"
+              />
+            </div>
+
+            {/* PASSWORD */}
+            <div className="input-group">
+              <label>
+                <span className="label-icon">🔒</span>
+                <span>Şifre</span>
+              </label>
+              <div className="password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="********"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="form-input"
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? "🙈" : "👁️"}
+                </button>
+              </div>
+            </div>
+
+            {error && (
+              <div className="login-error">
+                <span className="error-icon">⚠️</span>
+                <span>{error}</span>
+              </div>
+            )}
+
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="submit-button"
+            >
+              {loading ? (
+                <>
+                  <span className="loading-spinner"></span>
+                  <span>{isSignup ? "Kayıt yapılıyor..." : "Giriş yapılıyor..."}</span>
+                </>
+              ) : (
+                <>
+                  <span className="button-icon">
+                    {isSignup ? "✨" : "🚀"}
+                  </span>
+                  <span>{isSignup ? "Kayıt Ol" : "Giriş Yap"}</span>
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
 
 export default Login;
-
-

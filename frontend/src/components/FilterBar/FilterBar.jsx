@@ -1,10 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Button } from "@mui/material";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import Filter from "./Filter";
 import "./FilterBar.css";
 
-function FilterBar({ onApply, currentFilters, sort, onSortChange, priceRange, discountRange, categories, sites }) {
+function FilterBar({ onApply, currentFilters, sort, onSortChange, priceRange, discountRange, genders, sites }) {
   const [openFilter, setOpenFilter] = useState(false);
   const filterRef = useRef(null);
   const [draft, setDraft] = useState(currentFilters || {});
@@ -15,7 +13,6 @@ function FilterBar({ onApply, currentFilters, sort, onSortChange, priceRange, di
     setDraft(currentFilters || {});
   }, [currentFilters]);
 
-  
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (filterRef.current && !filterRef.current.contains(e.target)) {
@@ -26,47 +23,80 @@ function FilterBar({ onApply, currentFilters, sort, onSortChange, priceRange, di
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  return (
-    <div className="container" ref={filterRef}>
-      <Button
-        onClick={toggleFilter}
-        variant="outlined"
-        startIcon={<FilterListIcon />}
-        sx={{
-          textTransform: "none",
-          borderRadius: "10px",
-          border: "none",
-          fontSize: "1rem",
-          padding: "12px 32px",
-          color: "#111827",
-          "&:hover": {
-            backgroundColor: "#f3f4f6",
-            transform: "scale(1.05)",
-            transition: "0.2s ease-in-out",
-          },
-        }}
-      >
-        Filtrele
-      </Button>
+  const handleApply = () => {
+    if (onApply) {
+      onApply(draft);
+      setOpenFilter(false);
+    }
+  };
 
-      <div className="sort-menu">
-        <label>Sırala: </label>
-        <select value={sort} onChange={(e) => onSortChange && onSortChange(e.target.value)}>
-          <option value="recommended">Önerilenler</option>
-          <option value="priceAsc">Artan Fiyat</option>
-          <option value="priceDesc">Azalan Fiyat</option>
-        </select>
+  const handleClear = () => {
+    const cleared = {};
+    setDraft(cleared);
+    if (onApply) {
+      onApply(cleared);
+      setOpenFilter(false);
+    }
+  };
+
+  const activeFilterCount = Object.values(draft).filter(v => {
+    if (Array.isArray(v)) return v[0] !== v[1] && v[0] !== 0;
+    return v && v !== '';
+  }).length;
+
+  return (
+    <div className="filter-bar-container" ref={filterRef}>
+      <div className="filter-bar">
+        {/* Filtre Butonu */}
+        <button
+          className={`filter-button ${openFilter ? 'active' : ''}`}
+          onClick={toggleFilter}
+          type="button"
+        >
+          <span className="filter-icon">🔍</span>
+          <span className="filter-text">Filtrele</span>
+          {activeFilterCount > 0 && (
+            <span className="filter-badge">{activeFilterCount}</span>
+          )}
+        </button>
+
+        {/* Sıralama */}
+        <div className="sort-section">
+          <span className="sort-label">
+            <span className="sort-icon">📊</span>
+            <span>Sırala:</span>
+          </span>
+          <select 
+            className="sort-select"
+            value={sort || "recommended"} 
+            onChange={(e) => onSortChange && onSortChange(e.target.value)}
+          >
+            <option value="recommended">Önerilenler</option>
+            <option value="priceAsc">Fiyat: Düşükten Yükseğe</option>
+            <option value="priceDesc">Fiyat: Yüksekten Düşüğe</option>
+            <option value="discountDesc">En Çok İndirim</option>
+          </select>
+        </div>
+
+        {/* Aktif Filtreler */}
+        {activeFilterCount > 0 && (
+          <button className="clear-filters" onClick={handleClear} type="button">
+            <span>✕</span>
+            <span>Temizle</span>
+          </button>
+        )}
       </div>
 
-      
+      {/* Filter Dropdown */}
       {openFilter && (
         <Filter
           value={draft}
           onChange={setDraft}
-          onApply={() => { onApply && onApply(draft); setOpenFilter(false); }}
+          onApply={handleApply}
+          onClear={handleClear}
           priceRange={priceRange}
           discountRange={discountRange}
-          categories={categories}
+          genders={genders}
           sites={sites}
         />
       )}

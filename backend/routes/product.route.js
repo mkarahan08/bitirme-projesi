@@ -1,8 +1,9 @@
 import express from 'express'
 import Product from '../models/products.js'
 const router = express.Router();
-import {getAllProducts, getProductById,createProduct,updateProduct , deleteProduct} from '../controllers/productController.js'
+import {getAllProducts, getProductById,createProduct,updateProduct , deleteProduct, searchProducts} from '../controllers/productController.js'
 
+router.get('/search', searchProducts); // 🔍 Arama route'u (/:id'den önce olmalı)
 router.get('/', getAllProducts);
 router.get('/:id', getProductById);
 router.post('/',createProduct);

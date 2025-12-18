@@ -1,7 +1,10 @@
 import mongoose from 'mongoose'
 
 const productSchema = new mongoose.Schema({
-  
+    id: {
+        type: String,
+        required: false
+    },
     name: {
         type: String,
         required: true
@@ -11,11 +14,11 @@ const productSchema = new mongoose.Schema({
         required: true
     },
     original_price: {
-        type: Number,
+        type: String,
         required: true
     },
     final_price: {
-        type: Number,
+        type: String,
         required: false
     },
     image: {
@@ -30,8 +33,12 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    },   
-    {timestamps: true}
+    satici: {
+        type: String,
+        required: true
+    },
+},   
+{timestamps: true}
 );    
 
 const Product = mongoose.model('Product', productSchema);

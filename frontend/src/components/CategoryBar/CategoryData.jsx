@@ -1,18 +1,33 @@
 export const categories = [
   {
-    name: "Tüm Kategoriler",
+    name: "Elektronik",
+  },
+  {
+    name: "Moda",
     subcategories: [
-      { name: "Giyim", subcategories: ["Elbise", "Tişört", "Pantolon"] },
-      { name: "Aksesuar", subcategories: ["Saat", "Küpe", "Kolye"] },
-      { name: "Ayakkabı", subcategories: ["Spor", "Topuklu", "Bot"] },
+      { name: "Erkek Moda" },
+      { name: "Kadin Moda" },
     ],
   },
-  { name: "Kadın" },
-  { name: "Erkek" },
-  { name: "Anne & Çocuk" },
-  { name: "Ev & Yaşam" },
-  { name: "Elektronik" },
-  { name: "Spor & Outdoor" },
-  { name: "Kozmetik" },
-  { name: "Süpermarket" },
+  {
+    name: "Ev ve Yaşam",
+  },
+  {
+    name: "Oto, Bahçe ve Yapı Market",
+  },
+  {
+    name: "Anne ve Bebek",
+  },
+  {
+    name: "Spor ve Outdoor",
+  },
+  {
+    name: "Kozmetik ve Kişisel Bakım",
+  },
+  {
+    name: "Süpermarket",
+  },
+  {
+    name: "Kitap, Müzik ve Film",
+  },
 ];

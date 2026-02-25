@@ -11,11 +11,19 @@ function Home() {
   const [sortBy, setSortBy] = useState("recommended");
   const [filters, setFilters] = useState({});
   const observerTarget = useRef(null);
+  // Her ürün için session boyunca sabit kalan rastgele offset (Önerilenler sıralaması için)
+  const randomOffsets = useRef({});
 
   // Redux state
   const { items, loading, loadingMore, error, searchQuery, isSearching, selectedCategory, pagination } = useSelector(
     (state) => state.products
   );
+
+  // Kategori değiştiğinde filtreleri ve sıralamayı sıfırla
+  useEffect(() => {
+    setFilters({});
+    setSortBy("recommended");
+  }, [selectedCategory]);
 
   // İlk yükleme - sadece arama modunda değilse ve kategori değiştiğinde
   useEffect(() => {
@@ -164,7 +172,18 @@ function Home() {
     }
 
     // Sıralama
-    if (sortBy === "priceAsc") {
+    if (sortBy === "recommended") {
+      // Önerilenler: indirim oranı yüksek olanlar önce, aynı seviyedekiler arasında rastgele sıra
+      // Her ürüne session boyunca sabit kalan bir random offset atanır
+      products.sort((a, b) => {
+        const offsetA = randomOffsets.current[a._id] ?? (randomOffsets.current[a._id] = Math.random());
+        const offsetB = randomOffsets.current[b._id] ?? (randomOffsets.current[b._id] = Math.random());
+        // İndirim %70 ağırlık, rastgele %30 ağırlık (0-30 puan arasında)
+        const scoreA = (a.discount || 0) * 0.7 + offsetA * 30;
+        const scoreB = (b.discount || 0) * 0.7 + offsetB * 30;
+        return scoreB - scoreA;
+      });
+    } else if (sortBy === "priceAsc") {
       products.sort((a, b) => (a.final_price || 0) - (b.final_price || 0));
     } else if (sortBy === "priceDesc") {
       products.sort((a, b) => (b.final_price || 0) - (a.final_price || 0));
@@ -198,46 +217,15 @@ function Home() {
 
   return (
     <div className="homeComponent">
-      {/* Kategori ve arama sonuç başlığı */}
-      {(selectedCategory || (isSearching && searchQuery)) && (
-        <div className="search-results-header">
-          {selectedCategory && (
-            <div className="search-results-content">
-              <h2 className="search-results-title category-title">
-                {selectedCategory} kategorisi
-              </h2>
-              <button 
-                onClick={() => {
-                  dispatch(clearCategory());
-                  dispatch(clearSearch());
-                  dispatch(resetPagination());
-                  dispatch(fetchProducts(1));
-                }}
-                className="clear-search-button"
-              >
-                ✕ Kategoriyi Temizle
-              </button>
-            </div>
-          )}
-          {isSearching && searchQuery && !selectedCategory && (
-            <div className="search-results-content">
-              <h2 className="search-results-title">
-                "{searchQuery}" için arama sonuçları
-              </h2>
-              <button 
-                onClick={() => {
-                  dispatch(clearSearch());
-                  dispatch(resetPagination());
-                  dispatch(fetchProducts(1));
-                }}
-                className="clear-search-button"
-              >
-                ✕ Aramayı Temizle
-              </button>
-            </div>
-          )}
-        </div>
-      )}
+      
+      {isSearching && searchQuery && (
+  <div className="search-results-header">
+    <h2 className="search-results-title">
+      "{searchQuery}" için arama sonuçları
+    </h2>
+  </div>
+)}
+
 
       <FilterBar
         onApply={setFilters}

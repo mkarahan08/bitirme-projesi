@@ -1,4 +1,4 @@
-import Product from '../models/products.js';
+import Product from '../models/hepsiburada.js';
 
 export const getAllProducts = async (req, res) => {
     try {
@@ -19,13 +19,24 @@ export const getAllProducts = async (req, res) => {
             }
         }
 
-        const products = await Product.find(query)
-            .skip(skip)
-            .limit(limit)
-            .sort({ createdAt: -1 });
-
         const total = await Product.countDocuments(query);
         const totalPages = Math.ceil(total / limit);
+
+        let products;
+
+        if (Object.keys(query).length === 0) {
+            // Ana sayfa (kategori seçili değil): tüm kategorilerden rastgele karışık getir
+            // $sample her seferinde farklı rastgele ürünler döndürür → infinite scroll'da yeni ürünler gelir
+            products = await Product.aggregate([
+                { $sample: { size: limit } }
+            ]);
+        } else {
+            // Kategori seçiliyse: klasik sayfalama
+            products = await Product.find(query)
+                .skip(skip)
+                .limit(limit)
+                .sort({ createdAt: -1 });
+        }
 
         res.status(200).json({
             products,

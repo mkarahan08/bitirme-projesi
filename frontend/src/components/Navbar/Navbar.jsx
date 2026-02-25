@@ -83,9 +83,9 @@ function Navbar() {
       <div className="navbar-left">
         <a href="/" className="logo-link">
           <div className="logo-icon-wrapper">
-            <span className="logo-icon">🛒</span>
+            <span className="logo-icon">🤑</span>
           </div>
-          <span className="logo-text">İNDİRİMSEPETİ</span>
+          <span className="logo-text">ŞakaGibiYa</span>
         </a>
       </div>
 

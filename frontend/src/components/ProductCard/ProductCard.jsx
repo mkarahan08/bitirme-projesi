@@ -27,6 +27,7 @@ function ProductCard({ product }) {
 
   const {
     _id,
+    brand,
     name,
     image,
     final_price,
@@ -77,7 +78,7 @@ function ProductCard({ product }) {
 
       {/* Ürün adı - Dinamik yükseklik */}
       <div className="product-name-container">
-        <h3 className="product-name">{name}</h3>
+        <h3 className="product-name"><strong>{brand}</strong> {name}</h3>
       </div>
 
       {/* Fiyat bilgisi */}

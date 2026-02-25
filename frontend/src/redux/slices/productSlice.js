@@ -19,10 +19,15 @@ export const fetchProducts = createAsyncThunk(
       const response = await api.get(url);
       const existingItems = state.products.items || [];
       
-      // Eğer ilk sayfa ise veya kategori değiştiyse yeni liste, değilse ekle
-      const products = page === 1 
-        ? response.data.products 
-        : [...existingItems, ...response.data.products];
+      // Eğer ilk sayfa ise yeni liste, değilse ekle (tekrar eden _id'leri filtrele)
+      let products;
+      if (page === 1) {
+        products = response.data.products;
+      } else {
+        const seenIds = new Set(existingItems.map(p => String(p._id)));
+        const newItems = response.data.products.filter(p => !seenIds.has(String(p._id)));
+        products = [...existingItems, ...newItems];
+      }
 
       return {
         products,

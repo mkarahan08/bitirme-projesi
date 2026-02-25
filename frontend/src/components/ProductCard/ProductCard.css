@@ -172,6 +172,10 @@
     font-size: 12px;
   }
 }
+.product-name strong {
+  font-weight: 700;
+}
+
 
 @media (max-width: 480px) {
   .product-card {

@@ -40,8 +40,8 @@ function Login() {
       <div className="login-container">
         <div className="login-header">
           <div className="logo-section">
-            <span className="logo-icon">🛒</span>
-            <h1 className="logo-text">İNDİRİMSEPETİ</h1>
+            <span className="logo-icon">🤑</span>
+            <h1 className="logo-text">ŞakaGibiYa</h1>
           </div>
           <p className="welcome-text">
             {isSignup 

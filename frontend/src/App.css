@@ -28,6 +28,8 @@ body {
 
 .main-content {
   flex: 1;
+  /* Navbar (70px) + CategoryBar (~50px) çıkarılarak footer her zaman ekranın altına itilir */
+  min-height: calc(100vh - 120px);
   overflow-x: hidden;
   overflow-y: visible;
   position: relative;

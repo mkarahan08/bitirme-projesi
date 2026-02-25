@@ -1,5 +1,5 @@
 import Favorite from "../models/favorites.js";
-import Product from "../models/products.js";
+import Product from "../models/hepsiburada.js";
 
 // Favorilere ekle
 export const addToFavorites = async (req, res) => {

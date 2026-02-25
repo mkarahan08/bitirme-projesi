@@ -14,9 +14,9 @@ function Footer() {
           <div className="footer-section footer-about">
             <div className="footer-logo">
               <div className="footer-logo-icon-wrapper">
-                <span className="footer-logo-icon">🛒</span>
+                <span className="footer-logo-icon">🤑</span>
               </div>
-              <span className="footer-logo-text">İNDİRİMSEPETİ</span>
+              <span className="footer-logo-text">ŞakaGibiYa</span>
             </div>
             <p className="footer-description">
               En iyi fiyatlarla en kaliteli ürünleri bulabileceğiniz 
@@ -95,7 +95,7 @@ function Footer() {
               </li>
               <li className="footer-contact-item">
                 <FaEnvelope className="contact-icon" />
-                <a href="mailto:info@indirimsepeti.com">info@indirimsepeti.com</a>
+                <a href="mailto:info@sakagibiya.com">info@sakagibiya.com</a>
               </li>
             </ul>
           </div>
@@ -105,7 +105,7 @@ function Footer() {
         <div className="footer-bottom">
           <div className="footer-bottom-content">
             <p className="footer-copyright">
-              © {currentYear} İNDİRİMSEPETİ. Tüm hakları saklıdır.
+              © {currentYear} ŞakaGibiYa. Tüm hakları saklıdır.
             </p>
             <div className="footer-legal">
               <a href="#" className="footer-legal-link">Gizlilik Politikası</a>

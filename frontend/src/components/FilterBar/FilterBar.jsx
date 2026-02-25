@@ -11,11 +11,20 @@ function FilterBar({ onApply, currentFilters, sort, onSortChange, priceRange, di
 
   useEffect(() => {
     setDraft(currentFilters || {});
+    // Eğer filtreler temizlendiyse dropdown'ı kapat
+    if (!currentFilters || Object.keys(currentFilters).length === 0) {
+      setOpenFilter(false);
+    }
   }, [currentFilters]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (filterRef.current && !filterRef.current.contains(e.target)) {
+        // Sort select'e tıklandığında dropdown'ı kapatma
+        const sortSelect = e.target.closest('.sort-select, .sort-section');
+        if (sortSelect) {
+          return;
+        }
         setOpenFilter(false);
       }
     };
@@ -23,9 +32,11 @@ function FilterBar({ onApply, currentFilters, sort, onSortChange, priceRange, di
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleApply = () => {
+  // committedFilters: Filter bileşeni boş inputları commit edip doğrudan gönderirse kullan
+  const handleApply = (committedFilters) => {
+    const filtersToApply = committedFilters !== undefined ? committedFilters : draft;
     if (onApply) {
-      onApply(draft);
+      onApply(filtersToApply);
       setOpenFilter(false);
     }
   };
@@ -39,8 +50,19 @@ function FilterBar({ onApply, currentFilters, sort, onSortChange, priceRange, di
     }
   };
 
-  const activeFilterCount = Object.values(draft).filter(v => {
-    if (Array.isArray(v)) return v[0] !== v[1] && v[0] !== 0;
+  const activeFilterCount = Object.entries(draft).filter(([key, v]) => {
+    if (Array.isArray(v)) {
+      if (key === 'price' && priceRange && priceRange.length === 2) {
+        // Fiyat filtresi aktifse: min !== priceRange[0] veya max !== priceRange[1]
+        return v[0] !== priceRange[0] || v[1] !== priceRange[1];
+      }
+      if (key === 'discount' && discountRange && discountRange.length === 2) {
+        // İndirim filtresi aktifse: min !== discountRange[0] veya max !== discountRange[1]
+        return v[0] !== discountRange[0] || v[1] !== discountRange[1];
+      }
+      // Diğer array'ler için: değerler farklıysa ve min 0 değilse
+      return v[0] !== v[1] && v[0] !== 0;
+    }
     return v && v !== '';
   }).length;
 
@@ -78,13 +100,6 @@ function FilterBar({ onApply, currentFilters, sort, onSortChange, priceRange, di
           </select>
         </div>
 
-        {/* Aktif Filtreler */}
-        {activeFilterCount > 0 && (
-          <button className="clear-filters" onClick={handleClear} type="button">
-            <span>✕</span>
-            <span>Temizle</span>
-          </button>
-        )}
       </div>
 
       {/* Filter Dropdown */}

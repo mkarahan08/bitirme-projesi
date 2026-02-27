@@ -9,13 +9,39 @@ import cors from 'cors';
 dotenv.config();
 const app = express();
 
+// ✅ CORS: diğer middleware'lerden ve route'lardan ÖNCE tanımlanmalı
+const allowedOrigins = [
+  'https://www.sakagibiya.com',
+  'https://sakagibiya.com',
+  'http://localhost:5173',
+  'http://localhost:4173',
+  'http://localhost:3000',
+  process.env.FRONTEND_URL,        // Vercel URL: https://sakagibiya.vercel.app
+].filter(Boolean); // undefined olanları çıkar
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Postman/curl gibi Origin göndermeyenlere izin ver
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+
+      return callback(new Error(`CORS: ${origin} adresine izin verilmiyor.`));
+    },
+    credentials: true,
+  })
+);
+
+// ✅ Preflight (OPTIONS) istekleri için
+app.options('*', cors());
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true
-  }));
+
+// ✅ Sunucu sağlık kontrolü endpoint'i
+app.get('/health', (req, res) => res.status(200).send('ok'));
 
 //routes
 app.use('/api/products', productRoutes);
@@ -26,9 +52,11 @@ app.get('/', (req, res) => {
     res.send('Hello World API Server');
 });
 
+const PORT = process.env.PORT || 5000;
+
 connectDB().then(() => {
-    app.listen(5000, () => {
-        console.log('Server is running on port 5000');
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Server is running on port ${PORT}`);
     });
     });
 
